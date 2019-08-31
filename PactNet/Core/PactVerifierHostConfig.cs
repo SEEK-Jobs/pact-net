@@ -21,7 +21,7 @@ namespace PactNet.Core
                     $" --broker-token \"{pactBrokerUriOptions.Token}\""
                  : string.Empty;
             var publishResults = config?.PublishVerificationResults == true ? $" --publish-verification-results=true --provider-app-version=\"{config.ProviderVersion}\"" : string.Empty;
-            var customHeader = config?.CustomHeader != null && !string.IsNullOrEmpty(config.CustomHeader?.Key) && !string.IsNullOrEmpty(config.CustomHeader?.Value) ? 
+            var customHeader = config?.CustomHeader != null && !string.IsNullOrEmpty(config.CustomHeader?.Key) && !string.IsNullOrEmpty(config.CustomHeader?.Value) ?
                 $" --custom-provider-header \"{config.CustomHeader?.Key}:{config.CustomHeader?.Value}\"" :
                 string.Empty;
             var verbose = config?.Verbose == true ? " --verbose true" : string.Empty;
@@ -36,7 +36,7 @@ namespace PactNet.Core
                 { "PACT_INTERACTION_RERUN_COMMAND", "To re-run just this failing interaction, change the verify method to '.Verify(description: \"<PACT_DESCRIPTION>\", providerState: \"<PACT_PROVIDER_STATE>\")'. Please do not check in this change!" }
             };
 
-            if(environment != null)
+            if (environment != null)
             {
                 foreach (var envVar in environment)
                 {

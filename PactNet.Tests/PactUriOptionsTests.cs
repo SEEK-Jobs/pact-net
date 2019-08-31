@@ -10,7 +10,7 @@ namespace PactNet.Tests
         {
             const string username = "";
             const string password = "somepassword";
-            
+
             Assert.Throws<ArgumentException>(() => new PactUriOptions(username, password));
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -17,7 +16,7 @@ namespace Provider.Api.Web.Tests
         private const string ConsumerName = "Event API Consumer";
         private readonly Func<IDictionary<string, object>, Task> m_next;
         private readonly IDictionary<string, Action> _providerStates;
-        
+
         public ProviderStateMiddleware(Func<IDictionary<string, object>, Task> next)
         {
             m_next = next;
@@ -40,7 +39,7 @@ namespace Provider.Api.Web.Tests
 
         private void InsertEventsIntoDatabase()
         {
-            
+
         }
 
         private void InsertEventIntoDatabase()
@@ -50,7 +49,7 @@ namespace Provider.Api.Web.Tests
 
         private void EnsureOneDetailsViewEventExists()
         {
-            
+
         }
 
         public async Task Invoke(IDictionary<string, object> environment)
@@ -74,7 +73,7 @@ namespace Provider.Api.Web.Tests
 
                     //A null or empty provider state key must be handled
                     if (providerState != null &&
-                        !IsNullOrEmpty(providerState.State) && 
+                        !IsNullOrEmpty(providerState.State) &&
                         providerState.Consumer == ConsumerName)
                     {
                         _providerStates[providerState.State].Invoke();

@@ -25,7 +25,7 @@ namespace PactNet
             _brokerUriOptions = brokerUriOptions;
         }
 
-        public PactPublisher(string brokerBaseUri, PactUriOptions brokerUriOptions = null) : 
+        public PactPublisher(string brokerBaseUri, PactUriOptions brokerUriOptions = null) :
             this(brokerBaseUri, brokerUriOptions, new HttpClientHandler())
         {
         }

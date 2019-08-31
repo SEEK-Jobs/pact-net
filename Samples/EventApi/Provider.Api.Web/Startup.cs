@@ -33,7 +33,7 @@ namespace Provider.Api.Web
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             var builder = new ContainerBuilder();
-            
+
             builder.RegisterApiControllers(typeof(EventsController).Assembly);
             var container = builder.Build();
 

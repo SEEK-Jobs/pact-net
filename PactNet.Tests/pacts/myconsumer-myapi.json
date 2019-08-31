@@ -1,0 +1,27 @@
+{
+  "consumer": {
+    "name": "MyConsumer"
+  },
+  "provider": {
+    "name": "MyApi"
+  },
+  "interactions": [
+    {
+      "description": "A GET request to retrieve a thing",
+      "request": {
+        "method": "get",
+        "path": "/things/1234"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "1.0.0"
+    }
+  }
+}

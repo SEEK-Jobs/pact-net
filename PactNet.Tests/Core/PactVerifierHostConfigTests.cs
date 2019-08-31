@@ -10,7 +10,7 @@ namespace PactNet.Tests.Core
         private IPactCoreHostConfig GetSubject(Uri baseUri = null, string pactUri = "../test/pact.json", PactUriOptions pactBrokerUriOptions = null, Uri providerStateSetupUri = null, PactVerifierConfig verifierConfig = null, IDictionary<string, string> environment = null)
         {
             return new PactVerifierHostConfig(
-                baseUri ?? new Uri("http://localhost:2833"), 
+                baseUri ?? new Uri("http://localhost:2833"),
                 pactUri,
                 pactBrokerUriOptions,
                 providerStateSetupUri,
@@ -229,7 +229,7 @@ namespace PactNet.Tests.Core
 
             Assert.Equal(expectedEnv.Count + 1, actualEnv.Count);
 
-            foreach(var envVar in expectedEnv)
+            foreach (var envVar in expectedEnv)
             {
                 Assert.Equal(envVar.Value, actualEnv[envVar.Key]);
             }
@@ -238,8 +238,8 @@ namespace PactNet.Tests.Core
         }
 
         private string BuildExpectedArguments(
-            Uri baseUri, 
-            string pactUri, 
+            Uri baseUri,
+            string pactUri,
             Uri providerStateSetupUri,
             PactUriOptions pactUriOptions = null,
             bool publishVerificationResults = false,

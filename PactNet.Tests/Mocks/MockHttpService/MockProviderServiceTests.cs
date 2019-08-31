@@ -379,7 +379,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
             var testContext = String.Empty;
 #if USE_NET4X
             testContext = "MockProviderServiceTests.VerifyInteractions_WhenHostIsNotNull_PerformsAdminInteractionsVerificationGetRequest";
-# endif
+#endif
             Assert.Equal(1, _fakeHttpMessageHandler.RequestsReceived.Count());
             Assert.Equal(HttpMethod.Get, _fakeHttpMessageHandler.RequestsReceived.First().Method);
             Assert.Equal($"http://localhost:1234/interactions/verification?example_description={testContext}", _fakeHttpMessageHandler.RequestsReceived.First().RequestUri.ToString());
@@ -420,7 +420,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
             var testContext = String.Empty;
 #if USE_NET4X
             testContext = "MockProviderServiceTests.ClearInteractions_WhenHostIsNotNull_PerformsAdminInteractionsDeleteRequest";
-# endif
+#endif
             Assert.Equal(1, _fakeHttpMessageHandler.RequestsReceived.Count());
             Assert.Equal(HttpMethod.Delete, _fakeHttpMessageHandler.RequestsReceived.First().Method);
             Assert.Equal($"http://localhost:1234/interactions?example_description={testContext}", _fakeHttpMessageHandler.RequestsReceived.First().RequestUri.ToString());

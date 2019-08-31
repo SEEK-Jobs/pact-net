@@ -22,11 +22,11 @@ namespace PactNet.Tests.Matchers.Type
             var matcher = GetSubject(example, min);
 
             var expected = new
-                           {
-                               json_class = "Pact::ArrayLike",
-                               contents = example,
-                               min = min
-                           };
+            {
+                json_class = "Pact::ArrayLike",
+                contents = example,
+                min = min
+            };
             var expectedJson = JsonConvert.SerializeObject(expected, JsonConfig.ApiSerializerSettings);
             var actualJson = JsonConvert.SerializeObject(matcher, JsonConfig.ApiSerializerSettings);
 

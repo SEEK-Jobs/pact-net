@@ -1,8 +1,15 @@
+using PactNet.Mocks.Models;
+
 namespace PactNet.Mocks
 {
-    public interface IMockProvider<out TMockProviderInterface> where TMockProviderInterface : IMockProvider<TMockProviderInterface>
+    public interface IMockProvider<out TMockProviderInterface, in TMockProviderMessage>
+        where TMockProviderInterface : IMockProvider<TMockProviderInterface, TMockProviderMessage>
+        where TMockProviderMessage : IMessage
     {
         TMockProviderInterface Given(string providerState);
-        TMockProviderInterface UponReceiving(string description);
+        TMockProviderInterface With(TMockProviderMessage request);
+
+        void Start();
+        void Stop();
     }
 }

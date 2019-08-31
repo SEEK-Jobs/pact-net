@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PactNet.Mocks.MockHttpService.Host;
 using PactNet.Mocks.MockHttpService.Models;
+using PactNet.Mocks.Models;
 using PactNet.Models;
 using static System.String;
 
@@ -27,7 +28,7 @@ namespace PactNet.Mocks.MockHttpService
             Func<Uri, AdminHttpClient> adminHttpClientFactory)
         {
             _hostFactory = hostFactory;
-            BaseUri = new Uri( $"{(enableSsl ? "https" : "http")}://localhost:{port}");
+            BaseUri = new Uri($"{(enableSsl ? "https" : "http")}://localhost:{port}");
             _adminHttpClient = adminHttpClientFactory(BaseUri);
         }
 
@@ -40,7 +41,7 @@ namespace PactNet.Mocks.MockHttpService
             : this(port, enableSsl, consumerName, providerName, config, ipAddress, jsonSerializerSettings, null, null)
         {
         }
-        
+
         public MockProviderService(int port, bool enableSsl, string consumerName, string providerName, PactConfig config, IPAddress ipAddress, Newtonsoft.Json.JsonSerializerSettings jsonSerializerSettings, string sslCert, string sslKey)
             : this(
                 baseUri => new RubyHttpHost(baseUri, consumerName, providerName, config, ipAddress, sslCert, sslKey),
@@ -205,7 +206,7 @@ namespace PactNet.Mocks.MockHttpService
             _description = null;
         }
 
-        private bool IsContentTypeSpecifiedForBody(IHttpMessage message)
+        private bool IsContentTypeSpecifiedForBody(IMessage message)
         {
             //No content-type required if there is no body
             if (message.Body == null)

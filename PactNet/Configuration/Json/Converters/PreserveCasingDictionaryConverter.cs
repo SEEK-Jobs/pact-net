@@ -15,7 +15,7 @@ namespace PactNet.Configuration.Json.Converters
             }
             else
             {
-                var dictionary = (IDictionary<string, object>) value;
+                var dictionary = (IDictionary<string, object>)value;
 
                 writer.WriteStartObject();
 

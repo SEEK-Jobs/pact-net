@@ -229,7 +229,7 @@ namespace Consumer
                 String.Format("The Events API request for {0} {1} failed. Response Status: {2}, Response Body: {3}",
                 failedRequest.Method.ToString().ToUpperInvariant(),
                 failedRequest.RequestUri,
-                (int)failedResponse.StatusCode, 
+                (int)failedResponse.StatusCode,
                 failedResponse.Content.ReadAsStringAsync().Result));
         }
 

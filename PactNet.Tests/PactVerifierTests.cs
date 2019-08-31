@@ -45,7 +45,7 @@ namespace PactNet.Tests
         {
             var pactVerifier = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => 
+            Assert.Throws<ArgumentException>(() =>
                 pactVerifier
                 .ProviderState(null));
         }
@@ -192,7 +192,7 @@ namespace PactNet.Tests
 
             Assert.Equal(pactFileUri, ((PactVerifier)pactVerifier).PactFileUri);
         }
-        
+
         [Fact]
         public void Verify_WhenServiceBaseUriIsNull_ThrowsInvalidOperationException()
         {

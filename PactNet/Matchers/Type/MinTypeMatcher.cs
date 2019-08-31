@@ -18,7 +18,7 @@ namespace PactNet.Matchers.Type
 
         public MinTypeMatcher(dynamic example, int min)
         {
-            if(min < 1)
+            if (min < 1)
             {
                 throw new ArgumentException("Min must be greater than 0");
             }

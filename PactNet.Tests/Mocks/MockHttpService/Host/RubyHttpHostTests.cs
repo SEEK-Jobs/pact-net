@@ -21,15 +21,15 @@ namespace PactNet.Tests.Mocks.MockHttpService.Host
             var baseUri = new Uri("http://localhost:9333");
 
             _mockCoreHost = Substitute.For<IPactCoreHost>();
-            _fakeHttpMessageHandler = aliveCheckResponseFactory != null ? 
-                new FakeHttpMessageHandler(aliveCheckResponseFactory) : 
+            _fakeHttpMessageHandler = aliveCheckResponseFactory != null ?
+                new FakeHttpMessageHandler(aliveCheckResponseFactory) :
                 new FakeHttpMessageHandler();
 
             return new RubyHttpHost(
-                _mockCoreHost, 
+                _mockCoreHost,
                 new AdminHttpClient(baseUri, _fakeHttpMessageHandler, null));
         }
-    
+
         [Fact]
         public void Start_WhenCalledAndTheCoreHostStartsQuickly_ShouldStartTheCoreHostAndEnsureItIsRunning()
         {
@@ -52,8 +52,8 @@ namespace PactNet.Tests.Mocks.MockHttpService.Host
             var host = GetSubject(() =>
             {
                 count++;
-                return count < 10 ? 
-                    new HttpResponseMessage(HttpStatusCode.InternalServerError) : 
+                return count < 10 ?
+                    new HttpResponseMessage(HttpStatusCode.InternalServerError) :
                     new HttpResponseMessage(HttpStatusCode.OK);
             });
 

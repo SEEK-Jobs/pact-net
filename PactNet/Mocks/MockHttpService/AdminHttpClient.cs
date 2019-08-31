@@ -28,7 +28,7 @@ namespace PactNet.Mocks.MockHttpService
             _jsonSerializerSettings = jsonSerializerSettings ?? JsonConfig.ApiSerializerSettings;
         }
 
-        public AdminHttpClient(Uri baseUri) : 
+        public AdminHttpClient(Uri baseUri) :
             this(baseUri, new HttpClientHandler(), null)
         {
         }

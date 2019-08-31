@@ -1,5 +1,4 @@
-﻿using PactNet.Mocks.MockHttpService;
-using Xunit;
+﻿using Xunit;
 
 namespace PactNet.Tests
 {

@@ -364,7 +364,7 @@ public class XUnitOutput : IOutput
 }
 ```
 
-#### 4. Run the test
+#### 3. Run the test
 Everything should be green
 
 Again, please note: we advise using a TDD approach when using this library, however we will leave it up to you.
@@ -402,7 +402,13 @@ var sslKey = @"{PathTo}\localhost.key";
 MockProviderService = PactBuilder.MockService(MockServerPort, true, IPAddress.Any, sslCrt, sslKey);
 ```
 
+### Message queues support:
+
+configuring a pact between a publisher and a subscriber is now possible:
+For further examples please refer to the [Samples](https://github.com/pact-foundation/pact-net/tree/master/Samples) in the solution.
+
 ### Publishing Pacts to a Broker
+
 The Pact broker is a useful tool that can be used to share pacts between the consumer and provider. In order to make this easy, below are a couple of options for publishing your Pacts to a Pact Broker.
 
 #### Using PowerShell on your build server

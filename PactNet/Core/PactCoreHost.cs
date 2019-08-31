@@ -91,7 +91,7 @@ namespace PactNet.Core
                 }
             }
 
-            if(config.Environment != null)
+            if (config.Environment != null)
             {
                 foreach (var envVar in config.Environment)
                 {

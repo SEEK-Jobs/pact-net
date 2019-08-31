@@ -21,19 +21,19 @@ namespace PactNet.Tests.Matchers.Regex
             var matcher = GetSubject(example, regex);
 
             var expected = new
-                           {
-                               json_class = "Pact::Term",
-                               data = new
-                                      {
-                                          generate = example,
-                                          matcher = new
-                                                    {
-                                                        json_class = "Regexp",
-                                                        o = 0,
-                                                        s = regex
-                                                    }
-                                      }
-                           };
+            {
+                json_class = "Pact::Term",
+                data = new
+                {
+                    generate = example,
+                    matcher = new
+                    {
+                        json_class = "Regexp",
+                        o = 0,
+                        s = regex
+                    }
+                }
+            };
             var expectedJson = JsonConvert.SerializeObject(expected, JsonConfig.ApiSerializerSettings);
             var actualJson = JsonConvert.SerializeObject(matcher, JsonConfig.ApiSerializerSettings);
 
