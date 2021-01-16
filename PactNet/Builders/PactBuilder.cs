@@ -38,7 +38,7 @@ namespace PactNet
 
         public IPactBuilder ServiceConsumer(string consumerName)
         {
-            if (String.IsNullOrEmpty(consumerName))
+            if (string.IsNullOrEmpty(consumerName))
             {
                 throw new ArgumentException("Please supply a non null or empty consumerName");
             }
@@ -50,7 +50,7 @@ namespace PactNet
 
         public IPactBuilder HasPactWith(string providerName)
         {
-            if (String.IsNullOrEmpty(providerName))
+            if (string.IsNullOrEmpty(providerName))
             {
                 throw new ArgumentException("Please supply a non null or empty providerName");
             }
@@ -61,30 +61,30 @@ namespace PactNet
         }
 
         public IMockProviderService MockService(
-            int port,
-            bool enableSsl = false,
-            IPAddress host = IPAddress.Loopback,
-            string sslCert = null,
+            int port, 
+            bool enableSsl = false, 
+            IPAddress host = IPAddress.Loopback, 
+            string sslCert = null, 
             string sslKey = null)
         {
             return MockService(port, jsonSerializerSettings: null, enableSsl: enableSsl, host: host, sslCert: sslCert, sslKey: sslKey);
         }
 
         public IMockProviderService MockService(
-            int port,
-            JsonSerializerSettings jsonSerializerSettings,
-            bool enableSsl = false,
-            IPAddress host = IPAddress.Loopback,
-            string sslCert = null,
+            int port, 
+            JsonSerializerSettings jsonSerializerSettings, 
+            bool enableSsl = false, 
+            IPAddress host = IPAddress.Loopback, 
+            string sslCert = null, 
             string sslKey = null)
         {
-            if (String.IsNullOrEmpty(ConsumerName))
+            if (string.IsNullOrEmpty(ConsumerName))
             {
                 throw new InvalidOperationException(
                     "ConsumerName has not been set, please supply a consumer name using the ServiceConsumer method.");
             }
 
-            if (String.IsNullOrEmpty(ProviderName))
+            if (string.IsNullOrEmpty(ProviderName))
             {
                 throw new InvalidOperationException(
                     "ProviderName has not been set, please supply a provider name using the HasPactWith method.");

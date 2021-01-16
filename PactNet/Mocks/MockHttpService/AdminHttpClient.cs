@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PactNet.Configuration.Json;
 using PactNet.Mocks.MockHttpService.Mappers;
@@ -38,12 +39,12 @@ namespace PactNet.Mocks.MockHttpService
         {
         }
 
-        public void SendAdminHttpRequest(HttpVerb method, string path)
+        public async Task SendAdminHttpRequest(HttpVerb method, string path)
         {
-            SendAdminHttpRequest<object>(method, path, null);
+            await SendAdminHttpRequest<object>(method, path, null);
         }
 
-        public void SendAdminHttpRequest<T>(HttpVerb method, string path, T requestContent, IDictionary<string, string> headers = null) where T : class
+        public async Task SendAdminHttpRequest<T>(HttpVerb method, string path, T requestContent, IDictionary<string, string> headers = null) where T : class
         {
             var responseContent = Empty;
 
@@ -64,12 +65,12 @@ namespace PactNet.Mocks.MockHttpService
                 request.Content = new StringContent(requestContentJson, Encoding.UTF8, "application/json");
             }
 
-            var response = _httpClient.SendAsync(request, CancellationToken.None).Result;
+            var response = await _httpClient.SendAsync(request, CancellationToken.None);
             var responseStatusCode = response.StatusCode;
 
             if (response.Content != null)
             {
-                responseContent = response.Content.ReadAsStringAsync().Result;
+                responseContent = await response.Content.ReadAsStringAsync();
             }
 
             Dispose(request);

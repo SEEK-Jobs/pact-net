@@ -10,14 +10,14 @@ namespace PactNet.Core
 {
     internal class PactCoreHost<T> : IPactCoreHost where T : IPactCoreHostConfig
     {
-        private readonly Process _process;
+        protected readonly Process _process;
         private readonly IPactCoreHostConfig _config;
 
         public PactCoreHost(T config)
         {
             _config = config;
 
-            var expectedPackage = String.Empty;
+            var expectedPackage = string.Empty;
 
 #if USE_NET4X
             var pactCoreDir = $"{Constants.BuildDirectory}{Path.DirectorySeparatorChar}"; //OS specific version will be appended
@@ -193,9 +193,9 @@ namespace PactNet.Core
 
         private string ReplaceConfigParams(string input, string pactCoreDir, string script)
         {
-            return !String.IsNullOrEmpty(input) ?
+            return !string.IsNullOrEmpty(input) ?
                 input.Replace("{pactCoreDir}", pactCoreDir).Replace("{script}", script) :
-                String.Empty;
+                string.Empty;
         }
     }
 }

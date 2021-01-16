@@ -13,12 +13,16 @@ namespace PactNet
         };
 
         public string Tag { get; }
+        public string Consumer { get; }
+        public string FallbackTag { get; }
         public bool? All { get; }
         public bool? Latest { get; }
 
-        public VersionTagSelector(string tag, bool? all = null, bool? latest = null)
+        public VersionTagSelector(string tag, string consumer = null, string fallbackTag = null, bool ? all = null, bool? latest = null)
         {
             Tag = tag;
+            Consumer = consumer;
+            FallbackTag = fallbackTag;
             All = all;
             Latest = latest;
         }

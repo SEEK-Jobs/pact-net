@@ -21,6 +21,7 @@ namespace PactNet
         public IEnumerable<string> ProviderVersionTags { get; private set; }
         public IEnumerable<VersionTagSelector> ConsumerVersionSelectors { get; private set; }
         public bool EnablePending { get; private set; }
+        public string IncludeWipPactsSince { get; private set; }
         public PactUriOptions PactUriOptions { get; private set; }
 
         internal PactVerifier(Func<PactVerifierHostConfig, IPactCoreHost> pactVerifierHostFactory, PactVerifierConfig config)
@@ -93,7 +94,7 @@ namespace PactNet
             return this;
         }
 
-        public IPactVerifier PactUri(string fileUri, PactUriOptions options = null)
+        public IPactVerifier PactUri(string fileUri, PactUriOptions uriOptions = null, IEnumerable<string> providerVersionTags = null)
         {
             if (IsNullOrEmpty(fileUri))
             {
@@ -101,13 +102,14 @@ namespace PactNet
             }
 
             PactFileUri = fileUri;
-            PactUriOptions = options;
+            PactUriOptions = uriOptions;
+            ProviderVersionTags = providerVersionTags;
 
             return this;
         }
 
         public IPactVerifier PactBroker(string brokerBaseUri, PactUriOptions uriOptions = null, bool enablePending = false,
-            IEnumerable<string> consumerVersionTags = null, IEnumerable<string> providerVersionTags = null, IEnumerable<VersionTagSelector> consumerVersionSelectors = null)
+            IEnumerable<string> consumerVersionTags = null, IEnumerable<string> providerVersionTags = null, IEnumerable<VersionTagSelector> consumerVersionSelectors = null, string includeWipPactsSince = null)
         {
             if (IsNullOrEmpty(brokerBaseUri))
             {
@@ -120,7 +122,8 @@ namespace PactNet
             ConsumerVersionTags = consumerVersionTags;
             ProviderVersionTags = providerVersionTags;
             ConsumerVersionSelectors = consumerVersionSelectors;
-            
+            IncludeWipPactsSince = includeWipPactsSince;
+
             return this;
         }
 
@@ -162,7 +165,7 @@ namespace PactNet
 
             var brokerConfig = !IsNullOrEmpty(BrokerBaseUri) ? 
                 new PactBrokerConfig(ProviderName, BrokerBaseUri, EnablePending,
-                    ConsumerVersionTags, ProviderVersionTags, ConsumerVersionSelectors) : 
+                    ConsumerVersionTags, ProviderVersionTags, ConsumerVersionSelectors, IncludeWipPactsSince) : 
                 null;
 
             var pactVerifier = _pactVerifierHostFactory(

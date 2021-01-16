@@ -17,12 +17,21 @@ namespace PactNet.Tests.Core
             public IEnumerable<IOutput> Outputters { get; }
             public IDictionary<string, string> Environment { get; }
 
-            public TestHostConfig(string script, IEnumerable<IOutput> outputters)
+            public TestHostConfig(string script)
             {
                 Script = script;
                 Arguments = "";
                 WaitForExit = true;
+            }
+
+            public TestHostConfig(string script, IEnumerable<IOutput> outputters): this(script)
+            {
                 Outputters = outputters;
+            }
+
+            public TestHostConfig(string script, string envKey, string envValue): this(script)
+            {
+                Environment = new Dictionary<string, string> { { envKey, envValue } };
             }
         }
 
@@ -64,6 +73,33 @@ namespace PactNet.Tests.Core
             _mockOutputters.ElementAt(0).Received(1).WriteLine("Oh no");
             _mockOutputters.ElementAt(1).Received(1).WriteLine("Oh no");
             _mockOutputters.ElementAt(2).Received(1).WriteLine("Oh no");
+        }
+
+        [Fact]
+        public void Ctor_SslCertFileEnvironmentVariableFromPlatformConfigIsGivenToRubyProcess()
+        {
+            var pactCoreHost = new PactCoreHostSpy<TestHostConfig>(new TestHostConfig("ssl-cert-file"));
+#if USE_NET4X
+            Assert.True(pactCoreHost.SpyRubyProcess.StartInfo.EnvironmentVariables.ContainsKey("SSL_CERT_FILE"));
+            Assert.EndsWith("ca-bundle.crt", pactCoreHost.SpyRubyProcess.StartInfo.EnvironmentVariables["SSL_CERT_FILE"]);
+#else
+            Assert.True(pactCoreHost.SpyRubyProcess.StartInfo.Environment.ContainsKey("SSL_CERT_FILE"));
+            Assert.EndsWith("ca-bundle.crt", pactCoreHost.SpyRubyProcess.StartInfo.Environment["SSL_CERT_FILE"]);
+#endif
+
+        }
+
+        [Fact]
+        public void Ctor_WhenCalledWithSslCertFileEnvironmentVariable_DefaultValueShouldbeOverriden()
+        {
+            var pactCoreHost = new PactCoreHostSpy<TestHostConfig>(new TestHostConfig("ssl-cert-file", "SSL_CERT_FILE", "path-to-custom-ca-file"));
+#if USE_NET4X
+            Assert.True(pactCoreHost.SpyRubyProcess.StartInfo.EnvironmentVariables.ContainsKey("SSL_CERT_FILE"));
+            Assert.Equal("path-to-custom-ca-file", pactCoreHost.SpyRubyProcess.StartInfo.EnvironmentVariables["SSL_CERT_FILE"]);
+#else
+            Assert.True(pactCoreHost.SpyRubyProcess.StartInfo.Environment.ContainsKey("SSL_CERT_FILE"));
+            Assert.Equal("path-to-custom-ca-file", pactCoreHost.SpyRubyProcess.StartInfo.Environment["SSL_CERT_FILE"]);
+#endif
         }
     }
 }

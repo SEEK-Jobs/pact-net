@@ -5,27 +5,95 @@ namespace PactNet
 {
     public class PactUriOptions
     {
-        public string Username { get; }
-        public string Password { get; }
-        public string Token { get; }
-        public string AuthorizationScheme { get; }
-        public string AuthorizationValue { get; }
+        public string Username { get; private set; }
+        public string Password { get; private set; }
+        public string Token { get; private set;  }
+        public string AuthorizationScheme { get; private set; }
+        public string AuthorizationValue { get; private set; }
+        public string SslCaFilePath { get; private set; }
+        public string HttpProxy { get; private set; }
+        public string HttpsProxy { get; private set; }
 
+        public PactUriOptions() { }
+        
         public PactUriOptions(string username, string password)
         {
-            if (String.IsNullOrEmpty(username))
+            SetBasicAuthenticationInternal(username, password);
+        }
+
+        public PactUriOptions(string token)
+        {
+            SetBearerAuthentication(token);
+        }
+
+        public PactUriOptions SetBasicAuthentication(string username, string password)
+        {
+            if (!string.IsNullOrEmpty(Token))
             {
-                throw new ArgumentException("username is null or empty.");
+                throw new InvalidOperationException("You can't set both bearer and basic authentication at the same time");
+            }
+            SetBasicAuthenticationInternal(username, password);
+            return this;
+        }
+
+        public PactUriOptions SetBearerAuthentication(string token)
+        {
+            if (!string.IsNullOrEmpty(Username) || !string.IsNullOrEmpty(Password))
+            {
+                throw new InvalidOperationException("You can't set both bearer and basic authentication at the same time");
+            }
+            SetBearerAuthenticationInternal(token);
+            return this;
+        }
+
+
+        public PactUriOptions SetSslCaFilePath(string pathToSslCaFile)
+        {
+            if (string.IsNullOrEmpty(pathToSslCaFile))
+            {
+                throw new ArgumentException($"{nameof(pathToSslCaFile)} is null or empty");
+            }
+            SslCaFilePath = pathToSslCaFile;
+            return this;
+        }
+
+        public PactUriOptions SetHttpProxy(string httpProxy)
+        {
+            if (string.IsNullOrEmpty(httpProxy))
+            {
+                throw new ArgumentException($"{nameof(httpProxy)} is null or empty");
+            }
+            HttpProxy = httpProxy;
+            HttpsProxy = httpProxy;
+            return this;
+        }
+
+        public PactUriOptions SetHttpProxy(string httpProxy, string httpsProxy)
+        {
+            SetHttpProxy(httpProxy);
+            if (string.IsNullOrEmpty(httpsProxy))
+            {
+                throw new ArgumentException($"{nameof(httpsProxy)} is null or empty");
+            }
+            HttpsProxy = httpsProxy;
+            return this;
+        }
+
+        private void SetBasicAuthenticationInternal(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException($"{nameof(username)} is null or empty.");
             }
 
             if (username.Contains(":"))
             {
-                throw new ArgumentException("username contains a ':' character, which is not allowed.");
+                throw new ArgumentException($"{nameof(username)} contains a ':' character, which is not allowed.");
             }
 
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
-                throw new ArgumentException("password is null or empty.");
+                throw new ArgumentException($"{nameof(password)} is null or empty.");
             }
 
             Username = username;
@@ -34,11 +102,11 @@ namespace PactNet
             AuthorizationValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Username}:{Password}"));
         }
 
-        public PactUriOptions(string token)
+        private void SetBearerAuthenticationInternal(string token)
         {
-            if (String.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
-                throw new ArgumentException("token is null or empty.");
+                throw new ArgumentException($"{nameof(token)} is null or empty.");
             }
 
             Token = token;

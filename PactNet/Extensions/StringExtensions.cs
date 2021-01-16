@@ -1,5 +1,3 @@
-using System;
-
 namespace PactNet.Extensions
 {
     public static class StringExtensions

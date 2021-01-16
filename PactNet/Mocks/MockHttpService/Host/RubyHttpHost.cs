@@ -40,7 +40,7 @@ namespace PactNet.Mocks.MockHttpService.Host
         {
             try
             {
-                _adminHttpClient.SendAdminHttpRequest(HttpVerb.Get, "/");
+                Async.RunSync(() => _adminHttpClient.SendAdminHttpRequest(HttpVerb.Get, "/"));
                 return new Tuple<bool, Exception>(true, null);
             }
             catch (Exception ex)

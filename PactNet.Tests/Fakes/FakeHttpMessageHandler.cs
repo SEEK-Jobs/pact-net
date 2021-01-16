@@ -31,18 +31,15 @@ namespace PactNet.Tests.Fakes
             _requestContentReceived = new List<string>();
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             _requestsReceived.Add(request);
             if (request.Content != null)
             {
-                _requestContentReceived.Add(request.Content.ReadAsStringAsync().Result);
+                _requestContentReceived.Add(await request.Content.ReadAsStringAsync());
             }
 
-            var tcs = new TaskCompletionSource<HttpResponseMessage>();
-            tcs.SetResult(ResponseFactory());
-
-            return tcs.Task;
+            return ResponseFactory();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace PactNet.Tests
 
             Assert.Throws<ArgumentException>(() =>
                 pactVerifier
-                .ProviderState(String.Empty));
+                .ProviderState(string.Empty));
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace PactNet.Tests
         {
             var pactVerifier = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => pactVerifier.ServiceProvider(String.Empty, "http://localhost:3442"));
+            Assert.Throws<ArgumentException>(() => pactVerifier.ServiceProvider(string.Empty, "http://localhost:3442"));
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace PactNet.Tests
         {
             var pactVerifier = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => pactVerifier.HonoursPactWith(String.Empty));
+            Assert.Throws<ArgumentException>(() => pactVerifier.HonoursPactWith(string.Empty));
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace PactNet.Tests
         {
             var pactVerifier = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => pactVerifier.PactUri(String.Empty));
+            Assert.Throws<ArgumentException>(() => pactVerifier.PactUri(string.Empty));
         }
 
         [Fact]
@@ -190,6 +190,18 @@ namespace PactNet.Tests
             var pactVerifier = GetSubject();
 
             pactVerifier.PactUri(pactFileUri);
+
+            Assert.Equal(pactFileUri, ((PactVerifier)pactVerifier).PactFileUri);
+        }
+
+        [Fact]
+        public void PactUri_WhenCalledWithProviderVerisionTags_SetsPactProviderVersionTags()
+        {
+            var pactFileUri = $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}Consumer.Tests{Path.DirectorySeparatorChar}pacts{Path.DirectorySeparatorChar}my_client-event_api.json";
+            var pactVerifier = GetSubject();
+            var tags = new List<string> { "tag1", "tag2" };
+
+            pactVerifier.PactUri(pactFileUri, providerVersionTags: tags);
 
             Assert.Equal(pactFileUri, ((PactVerifier)pactVerifier).PactFileUri);
         }
@@ -267,7 +279,7 @@ namespace PactNet.Tests
             var serviceProvider = "Event API";
             var serviceConsumer = "My client";
             var pactUri = "https://broker/consumer/test/provider/hello/latest";
-            var pactUriOptions = new PactUriOptions("username", "password");
+            var pactUriOptions = new PactUriOptions().SetBasicAuthentication("username", "password");
 
             var pactVerifier = GetSubject();
             pactVerifier
@@ -286,7 +298,7 @@ namespace PactNet.Tests
             var serviceProvider = "Event API";
             var serviceConsumer = "My client";
             var pactUri = "https://broker/consumer/test/provider/hello/latest";
-            var pactUriOptions = new PactUriOptions("mytoken");
+            var pactUriOptions = new PactUriOptions().SetBearerAuthentication("mytoken");
 
             var pactVerifier = GetSubject();
             pactVerifier
@@ -305,7 +317,7 @@ namespace PactNet.Tests
             var serviceProvider = "Event API";
             var serviceConsumer = "My client";
             var pactUri = "https://broker/consumer/test/provider/hello/latest";
-            var pactUriOptions = new PactUriOptions("mytoken");
+            var pactUriOptions = new PactUriOptions().SetBearerAuthentication("mytoken");
 
             var pactVerifier = GetSubject();
             pactVerifier

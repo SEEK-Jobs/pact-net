@@ -7,6 +7,7 @@ using System.Text;
 using Consumer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Consumer
 {
@@ -30,23 +31,22 @@ namespace Consumer
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public bool IsAlive()
+        public async Task<bool> IsAlive()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/stats/status");
             request.Headers.Add("Accept", "application/json");
 
-            var response = _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             try
             {
-                var result = response.Result;
-                if (result.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var responseContent = JsonConvert.DeserializeObject<dynamic>(result.Content.ReadAsStringAsync().Result, _jsonSettings);
+                    var responseContent = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync(), _jsonSettings);
                     return responseContent.alive;
                 }
 
-                RaiseResponseError(request, result);
+                await RaiseResponseError(request, response);
             }
             finally
             {
@@ -56,47 +56,45 @@ namespace Consumer
             return false;
         }
 
-        public DateTime? UpSince()
+        public async Task<DateTime?> UpSince()
         {
             var statusRequest = new HttpRequestMessage(HttpMethod.Get, "/stats/status");
             statusRequest.Headers.Add("Accept", "application/json");
 
-            var statusResponse = _httpClient.SendAsync(statusRequest);
+            var statusResponse = await _httpClient.SendAsync(statusRequest);
 
             try
             {
-                var statusResult = statusResponse.Result;
                 var statusResponseBody = new StatusResponseBody();
 
-                if (statusResult.StatusCode == HttpStatusCode.OK)
+                if (statusResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    statusResponseBody = JsonConvert.DeserializeObject<StatusResponseBody>(statusResult.Content.ReadAsStringAsync().Result, _jsonSettings);
+                    statusResponseBody = JsonConvert.DeserializeObject<StatusResponseBody>(await statusResponse.Content.ReadAsStringAsync(), _jsonSettings);
                 }
                 else
                 {
-                    RaiseResponseError(statusRequest, statusResult);
+                    await RaiseResponseError(statusRequest, statusResponse);
                 }
 
                 if (statusResponseBody.Alive)
                 {
                     var uptimeLink = statusResponseBody.Links.Single(x => x.Key.Equals("uptime")).Value.Href;
 
-                    if (!String.IsNullOrEmpty(uptimeLink))
+                    if (!string.IsNullOrEmpty(uptimeLink))
                     {
                         var uptimeRequest = new HttpRequestMessage(HttpMethod.Get, uptimeLink);
                         uptimeRequest.Headers.Add("Accept", "application/json");
 
-                        var uptimeResponse = _httpClient.SendAsync(uptimeRequest);
+                        var uptimeResponse = await _httpClient.SendAsync(uptimeRequest);
                         try
                         {
-                            var uptimeResult = uptimeResponse.Result;
-                            if (uptimeResult.StatusCode == HttpStatusCode.OK)
+                            if (uptimeResponse.StatusCode == HttpStatusCode.OK)
                             {
-                                var uptimeResponseBody = JsonConvert.DeserializeObject<UptimeResponseBody>(uptimeResult.Content.ReadAsStringAsync().Result, _jsonSettings);
+                                var uptimeResponseBody = JsonConvert.DeserializeObject<UptimeResponseBody>(await uptimeResponse.Content.ReadAsStringAsync(), _jsonSettings);
                                 return uptimeResponseBody.UpSince;
                             }
 
-                            RaiseResponseError(uptimeRequest, uptimeResult);
+                            await RaiseResponseError(uptimeRequest, uptimeResponse);
                         }
                         finally
                         {
@@ -113,25 +111,24 @@ namespace Consumer
             return null;
         }
 
-        public IEnumerable<Event> GetAllEvents()
+        public async Task<IEnumerable<Event>> GetAllEvents()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/events");
             request.Headers.Add("Accept", "application/json");
 
-            var response = _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             try
             {
-                var result = response.Result;
-                if (result.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var content = result.Content.ReadAsStringAsync().Result;
-                    return !String.IsNullOrEmpty(content)
+                    var content = await response.Content.ReadAsStringAsync();
+                    return !string.IsNullOrEmpty(content)
                                 ? JsonConvert.DeserializeObject<IEnumerable<Event>>(content, _jsonSettings)
                                 : new List<Event>();
                 }
 
-                RaiseResponseError(request, result);
+                await RaiseResponseError(request, response);
             }
             finally
             {
@@ -141,22 +138,21 @@ namespace Consumer
             return null;
         }
 
-        public Event GetEventById(Guid id)
+        public async Task<Event> GetEventById(Guid id)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, String.Format("/events/{0}", id));
+            var request = new HttpRequestMessage(HttpMethod.Get, string.Format("/events/{0}", id));
             request.Headers.Add("Accept", "application/json");
 
-            var response = _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             try
             {
-                var result = response.Result;
-                if (result.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return JsonConvert.DeserializeObject<Event>(result.Content.ReadAsStringAsync().Result, _jsonSettings);
+                    return JsonConvert.DeserializeObject<Event>(await response.Content.ReadAsStringAsync(), _jsonSettings);
                 }
 
-                RaiseResponseError(request, result);
+                await RaiseResponseError(request, response);
             }
             finally
             {
@@ -166,22 +162,21 @@ namespace Consumer
             return null;
         }
 
-        public IEnumerable<Event> GetEventsByType(string eventType)
+        public async Task<IEnumerable<Event>> GetEventsByType(string eventType)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, String.Format("/events?type={0}", eventType));
+            var request = new HttpRequestMessage(HttpMethod.Get, string.Format("/events?type={0}", eventType));
             request.Headers.Add("Accept", "application/json");
 
-            var response = _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             try
             {
-                var result = response.Result;
-                if (result.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return JsonConvert.DeserializeObject<IEnumerable<Event>>(result.Content.ReadAsStringAsync().Result, _jsonSettings);
+                    return JsonConvert.DeserializeObject<IEnumerable<Event>>(await response.Content.ReadAsStringAsync(), _jsonSettings);
                 }
 
-                RaiseResponseError(request, result);
+                await RaiseResponseError(request, response);
             }
             finally
             {
@@ -191,7 +186,7 @@ namespace Consumer
             return null;
         }
 
-        public void CreateEvent(Guid eventId, string eventType = "DetailsView")
+        public async Task CreateEvent(Guid eventId, string eventType = "DetailsView")
         {
             var @event = new
             {
@@ -204,18 +199,17 @@ namespace Consumer
             var requestContent = new StringContent(eventJson, Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage(HttpMethod.Post, "/events") { Content = requestContent };
 
-            var response = _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             try
             {
-                var result = response.Result;
-                var statusCode = result.StatusCode;
+                var statusCode = response.StatusCode;
                 if (statusCode == HttpStatusCode.Created)
                 {
                     return;
                 }
 
-                RaiseResponseError(request, result);
+                await RaiseResponseError(request, response);
             }
             finally
             {
@@ -223,14 +217,14 @@ namespace Consumer
             }
         }
 
-        private static void RaiseResponseError(HttpRequestMessage failedRequest, HttpResponseMessage failedResponse)
+        private static async Task RaiseResponseError(HttpRequestMessage failedRequest, HttpResponseMessage failedResponse)
         {
             throw new HttpRequestException(
-                String.Format("The Events API request for {0} {1} failed. Response Status: {2}, Response Body: {3}",
+                string.Format("The Events API request for {0} {1} failed. Response Status: {2}, Response Body: {3}",
                 failedRequest.Method.ToString().ToUpperInvariant(),
                 failedRequest.RequestUri,
-                (int)failedResponse.StatusCode,
-                failedResponse.Content.ReadAsStringAsync().Result));
+                (int)failedResponse.StatusCode, 
+                await failedResponse.Content.ReadAsStringAsync()));
         }
 
         public void Dispose()

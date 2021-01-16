@@ -39,7 +39,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
         public void Ctor_WhenCalledWithPort_SetsBaseUri()
         {
             const int port = 999;
-            var expectedBaseUri = String.Format("http://localhost:{0}", port);
+            var expectedBaseUri = string.Format("http://localhost:{0}", port);
             var mockService = GetSubject(port);
 
             Assert.Equal(expectedBaseUri, ((MockProviderService)mockService).BaseUri.OriginalString);
@@ -92,7 +92,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
         {
             var mockService = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => mockService.Given(String.Empty));
+            Assert.Throws<ArgumentException>(() => mockService.Given(string.Empty));
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
         {
             var mockService = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => mockService.UponReceiving(String.Empty));
+            Assert.Throws<ArgumentException>(() => mockService.UponReceiving(string.Empty));
         }
 
         [Fact]
@@ -376,7 +376,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
 
             mockService.VerifyInteractions();
 
-            var testContext = String.Empty;
+            var testContext = string.Empty;
 #if USE_NET4X
             testContext = "MockProviderServiceTests.VerifyInteractions_WhenHostIsNotNull_PerformsAdminInteractionsVerificationGetRequest";
 #endif
@@ -417,7 +417,7 @@ namespace PactNet.Tests.Mocks.MockHttpService
 
             mockService.ClearInteractions();
 
-            var testContext = String.Empty;
+            var testContext = string.Empty;
 #if USE_NET4X
             testContext = "MockProviderServiceTests.ClearInteractions_WhenHostIsNotNull_PerformsAdminInteractionsDeleteRequest";
 #endif

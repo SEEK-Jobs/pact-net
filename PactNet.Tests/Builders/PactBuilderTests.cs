@@ -1,11 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json;
 using NSubstitute;
+using PactNet.Configuration.Json;
 using PactNet.Mocks.MockHttpService;
 using PactNet.Mocks.MockHttpService.Models;
+using PactNet.Models;
 using Xunit;
 
-namespace PactNet.Tests.Builders
+namespace PactNet.Tests
 {
     public class PactBuilderTests
     {
@@ -22,7 +24,7 @@ namespace PactNet.Tests.Builders
 
             pactBuilder.ServiceConsumer(consumerName);
 
-            Assert.Equal(consumerName, ((PactBuilder)pactBuilder).ConsumerName);
+            Assert.Equal(consumerName, ((PactBuilder) pactBuilder).ConsumerName);
         }
 
         [Fact]
@@ -38,7 +40,7 @@ namespace PactNet.Tests.Builders
         {
             var pactBuilder = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => pactBuilder.ServiceConsumer(String.Empty));
+            Assert.Throws<ArgumentException>(() => pactBuilder.ServiceConsumer(string.Empty));
         }
 
         [Fact]
@@ -49,7 +51,7 @@ namespace PactNet.Tests.Builders
 
             pact.HasPactWith(providerName);
 
-            Assert.Equal(providerName, ((PactBuilder)pact).ProviderName);
+            Assert.Equal(providerName, ((PactBuilder) pact).ProviderName);
         }
 
         [Fact]
@@ -65,7 +67,7 @@ namespace PactNet.Tests.Builders
         {
             var pactBuilder = GetSubject();
 
-            Assert.Throws<ArgumentException>(() => pactBuilder.HasPactWith(String.Empty));
+            Assert.Throws<ArgumentException>(() => pactBuilder.HasPactWith(string.Empty));
         }
 
         [Fact]

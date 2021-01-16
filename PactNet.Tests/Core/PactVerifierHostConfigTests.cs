@@ -57,11 +57,23 @@ namespace PactNet.Tests.Core
         }
 
         [Fact]
+        public void Ctor_WhenCalledWithAnEmptyPactUriOptions_SetsTheCorrectArgs()
+        {
+            var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
+                pactUri: "http://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions(),
+                providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
+
+            var expectedArguments = "\"http://broker:9292/test\" --provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\"";
+            Assert.Equal(expectedArguments, config.Arguments);
+        }
+
+        [Fact]
         public void Ctor_WhenCalledWithABasicAuthenticatedHttpsPactUri_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"), 
-                pactUri: "https://broker:9292/test", 
-                pactBrokerUriOptions: new PactUriOptions("username", "password"), 
+                pactUri: "https://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions().SetBasicAuthentication("username", "password"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
             var expectedArguments = "\"https://broker:9292/test\" --provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --broker-username \"username\" --broker-password \"password\"";
@@ -69,11 +81,11 @@ namespace PactNet.Tests.Core
         }
 
         [Fact]
-        public void Ctor_WhenCalledWithATokenAuthenticatedHttpsPactUri_SetsTheCorrectArgs()
+        public void Ctor_WhenCalledWithABearerAuthenticatedHttpsPactUri_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
-                pactUri: "https://broker:9292/test", 
-                pactBrokerUriOptions: new PactUriOptions("token"), 
+                pactUri: "https://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions().SetBearerAuthentication("token"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
             var expectedArguments = "\"https://broker:9292/test\" --provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --broker-token \"token\"";
@@ -81,11 +93,61 @@ namespace PactNet.Tests.Core
         }
 
         [Fact]
+        public void Ctor_WhenCalledWithSslCaFilePathHttpsPactUri_AddSslCertFileEnvironmentVariable()
+        {
+            var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
+                pactUri: "https://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions().SetSslCaFilePath("C:/path/to/some/ca-file.crt"),
+                providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
+
+            var environment = new Dictionary<string, string>
+            {
+                { "SSL_CERT_FILE", "C:/path/to/some/ca-file.crt" }
+            };
+            
+            AssertEnvironmentIsCorrectlySet(environment, config.Environment);
+        }
+
+        [Fact]
+        public void Ctor_WhenCalledWithHttpProxyHttpsPactUri_AddHttpProxyEnvironmentVariable()
+        {
+            var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
+                pactUri: "https://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions().SetHttpProxy("http://my-http-proxy"),
+                providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
+
+            var environment = new Dictionary<string, string>
+            {
+                { "HTTP_PROXY", "http://my-http-proxy" },
+                { "HTTPS_PROXY", "http://my-http-proxy" },
+            };
+
+            AssertEnvironmentIsCorrectlySet(environment, config.Environment);
+        }
+
+        [Fact]
+        public void Ctor_WhenCalledWithHttpAndHttpsProxyHttpsPactUri_AddHttpProxyEnvironmentVariable()
+        {
+            var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
+                pactUri: "https://broker:9292/test",
+                pactBrokerUriOptions: new PactUriOptions().SetHttpProxy("http://my-http-proxy", "http://my-https-proxy"),
+                providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
+
+            var environment = new Dictionary<string, string>
+            {
+                { "HTTP_PROXY", "http://my-http-proxy" },
+                { "HTTPS_PROXY", "http://my-https-proxy" },
+            };
+
+            AssertEnvironmentIsCorrectlySet(environment, config.Environment);
+        }
+
+        [Fact]
         public void Ctor_WhenCalledWithABasicAuthenticatedBrokerConfig_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"), 
-                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, null, null, null), 
-                pactBrokerUriOptions: new PactUriOptions("username", "password"), 
+                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, null, null, null, null),
+                pactBrokerUriOptions: new PactUriOptions().SetBasicAuthentication("username", "password"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
             var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --broker-username \"username\" --broker-password \"password\"";
@@ -96,8 +158,8 @@ namespace PactNet.Tests.Core
         public void Ctor_WhenCalledWithATokenAuthenticatedBrokerConfig_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"), 
-                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, null, null, null), 
-                pactBrokerUriOptions: new PactUriOptions("token"), 
+                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, null, null, null, null),
+                pactBrokerUriOptions: new PactUriOptions().SetBearerAuthentication("token"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
             var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --broker-token \"token\"";
@@ -108,14 +170,14 @@ namespace PactNet.Tests.Core
         public void Ctor_WhenCalledWithTagsInTheBrokerConfig_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"), 
-                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, new List<string> { "ctag1", "ctag2" }, new List<string> { "ptag1", "ptag2" }, null), 
-                pactBrokerUriOptions: new PactUriOptions("token"), 
+                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, new List<string> { "ctag1", "ctag2" }, new List<string> { "ptag1", "ptag2" }, null, null),
+                pactBrokerUriOptions: new PactUriOptions().SetBearerAuthentication("token"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
             var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --consumer-version-tag \"ctag1\" --consumer-version-tag \"ctag2\" --provider-version-tag \"ptag1\" --provider-version-tag \"ptag2\" --broker-token \"token\"";
             Assert.Equal(expectedArguments, config.Arguments);
         }
-
+ 
         [Fact]
         public void Ctor_WhenCalledWithEnablePendingAndConsumerTagSelectorsInTheBrokerConfig_SetsTheCorrectArgs()
         {
@@ -123,12 +185,26 @@ namespace PactNet.Tests.Core
                 brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", true, null, null, new List<VersionTagSelector>
                 {
                     new VersionTagSelector("ctag1", all: true),
-                    new VersionTagSelector("ctag2", latest: true)
-                }), 
-                pactBrokerUriOptions: new PactUriOptions("token"), 
+                    new VersionTagSelector("ctag2", latest: true),
+                    new VersionTagSelector("ctag3", consumer: "Consumer Name", fallbackTag: "master", latest: true),
+                    new VersionTagSelector("ctag4", consumer: "Consumer Name", fallbackTag: "master", all: true)
+                }, null),
+                pactBrokerUriOptions: new PactUriOptions().SetBearerAuthentication("token"), 
                 providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
 
-            var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag1\\\",\\\"all\\\":true}\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag2\\\",\\\"latest\\\":true}\" --enable-pending --broker-token \"token\"";
+            var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag1\\\",\\\"all\\\":true}\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag2\\\",\\\"latest\\\":true}\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag3\\\",\\\"consumer\\\":\\\"Consumer Name\\\",\\\"fallbackTag\\\":\\\"master\\\",\\\"latest\\\":true}\" --consumer-version-selector \"{\\\"tag\\\":\\\"ctag4\\\",\\\"consumer\\\":\\\"Consumer Name\\\",\\\"fallbackTag\\\":\\\"master\\\",\\\"all\\\":true}\" --enable-pending --broker-token \"token\"";
+            Assert.Equal(expectedArguments, config.Arguments);
+        }
+
+        [Fact]
+        public void Ctor_WhenCalledWithIncludeWipPactsSinceInTheBrokerConfig_SetsTheCorrectArgs()
+        {
+            var config = GetSubject(baseUri: new Uri("http://127.0.0.1"),
+                brokerConfig: new PactBrokerConfig("Provider Name", "https://broker:9292/test", false, null, null, null, "2020-06-22"),
+                pactBrokerUriOptions: new PactUriOptions().SetBearerAuthentication("token"),
+                providerStateSetupUri: new Uri("http://127.0.0.1/states/"));
+
+            var expectedArguments = "--provider-base-url \"http://127.0.0.1\" --provider-states-setup-url \"http://127.0.0.1/states/\" --pact-broker-base-url \"https://broker:9292/test\" --provider \"Provider Name\" --include-wip-pacts-since \"2020-06-22\" --broker-token \"token\"";
             Assert.Equal(expectedArguments, config.Arguments);
         }
 

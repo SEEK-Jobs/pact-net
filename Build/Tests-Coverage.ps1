@@ -22,7 +22,7 @@ New-Item -ItemType directory -Path "$BuildRoot\coverage" -ErrorAction:ignore
 & $OpenCoverExe `
     -register:user `
     "-target:$XUnitExe" `
-    '-targetargs:..\PactNet.Tests\bin\Release\net45\PactNet.Tests.dll -noshadow' `
+    '-targetargs:..\PactNet.Tests\bin\Release\net46\PactNet.Tests.dll -noshadow' `
     '-filter:+[PactNet]* -[*Tests]*' `
     '-output:.\coverage\results.xml'
     

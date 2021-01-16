@@ -40,7 +40,7 @@ public class SomethingApiClient
 		BaseUri = baseUri ?? "http://my-api";
 	}
 	
-	public Something GetSomething(string id)
+	public async Task<Something> GetSomething(string id)
 	{
 		string reasonPhrase;
 		
@@ -49,12 +49,12 @@ public class SomethingApiClient
 			var request = new HttpRequestMessage(HttpMethod.Get, "/somethings/" + id);
 			request.Headers.Add("Accept", "application/json");
 
-			var response = client.SendAsync(request);
+			var response = await client.SendAsync(request);
 
-			var content = response.Result.Content.ReadAsStringAsync().Result;
-			var status = response.Result.StatusCode;
+			var content = await response.Content.ReadAsStringAsync();
+			var status = response.StatusCode;
 
-			reasonPhrase = response.Result.ReasonPhrase; //NOTE: any Pact mock provider errors will be returned here and in the response body
+			reasonPhrase = response.ReasonPhrase; //NOTE: any Pact mock provider errors will be returned here and in the response body
 			
 			request.Dispose();
 			response.Dispose();

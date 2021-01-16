@@ -10,10 +10,11 @@ namespace PactNet
         public IEnumerable<string> ConsumerVersionTags { get; }
         public IEnumerable<string> ProviderVersionTags { get; }
         public IEnumerable<VersionTagSelector> ConsumerVersionSelectors { get; }
+        public string IncludeWipPactsSince { get; }
 
         public PactBrokerConfig(string providerName, string brokerBaseUri, bool enablePending,
             IEnumerable<string> consumerVersionTags, IEnumerable<string> providerVersionTags, 
-            IEnumerable<VersionTagSelector> consumerVersionSelectors)
+            IEnumerable<VersionTagSelector> consumerVersionSelectors, string includeWipPactsSince)
         {
             ProviderName = providerName;
             BrokerBaseUri = brokerBaseUri;
@@ -21,6 +22,7 @@ namespace PactNet
             ConsumerVersionTags = consumerVersionTags;
             ProviderVersionTags = providerVersionTags;
             ConsumerVersionSelectors = consumerVersionSelectors;
+            IncludeWipPactsSince = includeWipPactsSince;
         }
     }
 }

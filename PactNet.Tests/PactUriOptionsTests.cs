@@ -10,8 +10,8 @@ namespace PactNet.Tests
         {
             const string username = "";
             const string password = "somepassword";
-
-            Assert.Throws<ArgumentException>(() => new PactUriOptions(username, password));
+            
+            Assert.Throws<ArgumentException>(() => new PactUriOptions().SetBasicAuthentication(username, password));
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace PactNet.Tests
             const string username = "some:user";
             const string password = "somepassword";
 
-            Assert.Throws<ArgumentException>(() => new PactUriOptions(username, password));
+            Assert.Throws<ArgumentException>(() => new PactUriOptions().SetBasicAuthentication(username, password));
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace PactNet.Tests
             const string username = "someuser";
             const string password = "";
 
-            Assert.Throws<ArgumentException>(() => new PactUriOptions(username, password));
+            Assert.Throws<ArgumentException>(() => new PactUriOptions().SetBasicAuthentication(username, password));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace PactNet.Tests
             const string expectedAuthScheme = "Basic";
             const string expectedAuthValue = "QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
 
-            var options = new PactUriOptions(username, password);
+            var options = new PactUriOptions().SetBasicAuthentication(username, password);
 
             Assert.Equal(expectedAuthScheme, options.AuthorizationScheme);
             Assert.Equal(expectedAuthValue, options.AuthorizationValue);
@@ -52,7 +52,7 @@ namespace PactNet.Tests
             const string username = "Aladdin";
             const string password = "open sesame";
 
-            var options = new PactUriOptions(username, password);
+            var options = new PactUriOptions().SetBasicAuthentication(username, password);
 
             Assert.Equal(username, options.Username);
             Assert.Equal(password, options.Password);
@@ -63,7 +63,7 @@ namespace PactNet.Tests
         {
             const string token = "";
 
-            Assert.Throws<ArgumentException>(() => new PactUriOptions(token));
+            Assert.Throws<ArgumentException>(() => new PactUriOptions().SetBearerAuthentication(token));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace PactNet.Tests
             const string expectedAuthScheme = "Bearer";
             const string expectedAuthValue = token;
 
-            var options = new PactUriOptions(token);
+            var options = new PactUriOptions().SetBearerAuthentication(token);
 
             Assert.Equal(expectedAuthScheme, options.AuthorizationScheme);
             Assert.Equal(expectedAuthValue, options.AuthorizationValue);
@@ -84,7 +84,7 @@ namespace PactNet.Tests
         {
             const string token = "MyToken";
 
-            var options = new PactUriOptions(token);
+            var options = new PactUriOptions().SetBearerAuthentication(token);
 
             Assert.Equal(token, options.Token);
         }
