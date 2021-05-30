@@ -74,7 +74,7 @@
         "body": {
           "eventId": "83f9262f-28f1-4703-ab1a-8cfd9e8249c9",
           "eventType": "DetailsView",
-          "timestamp": "2021-05-03T23:12:59.2284654Z"
+          "timestamp": "2021-05-15T08:33:25.1378551Z"
         },
         "matchingRules": {
           "$.headers.Server": {

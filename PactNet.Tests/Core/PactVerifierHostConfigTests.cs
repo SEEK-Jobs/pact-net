@@ -248,6 +248,7 @@ namespace PactNet.Tests.Core
         }
 
         [Fact]
+        [Obsolete]
         public void Ctor_WhenCalledWithCustomHeader_SetsTheCorrectArgs()
         {
             var config = GetSubject(baseUri: new Uri("http://127.0.0.1"), 

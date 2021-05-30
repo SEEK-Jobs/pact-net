@@ -24,7 +24,7 @@ namespace PactNet
                 }
                 if (_customHeader != null)
                 {
-                    CustomHeaders.Remove(_customHeader.Value.Value);
+                    CustomHeaders.Remove(_customHeader.Value.Key);
                 }
                 _customHeader = value;
             }
