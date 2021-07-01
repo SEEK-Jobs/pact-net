@@ -1,4 +1,5 @@
 using System;
+
 using System.Threading.Tasks;
 using PactNet.Models;
 
@@ -9,7 +10,7 @@ namespace PactNet.Native
     /// </summary>
     public class NativePactBuilder : IPactBuilderV2, IPactBuilderV3
     {
-        private readonly IMockServer server;
+        private readonly IHttpMockServer server;
         private readonly PactHandle pact;
         private readonly PactConfig config;
         private readonly int? port;
@@ -23,7 +24,7 @@ namespace PactNet.Native
         /// <param name="config">Pact config</param>
         /// <param name="port">Optional port, otherwise one is dynamically allocated</param>
         /// <param name="host">Optional host, otherwise loopback is used</param>
-        internal NativePactBuilder(IMockServer server, PactHandle pact, PactConfig config, int? port = null, IPAddress host = IPAddress.Loopback)
+        internal NativePactBuilder(IHttpMockServer server, PactHandle pact, PactConfig config, int? port = null, IPAddress host = IPAddress.Loopback)
         {
             this.server = server;
             this.pact = pact;

@@ -53,9 +53,9 @@ namespace PactNet
                 throw new ArgumentException("Please provide a valid provider name", nameof(provider));
             }
 
-            this.Consumer = consumer;
-            this.Provider = provider;
-            this.Config = config;
+            Consumer = consumer;
+            Provider = provider;
+            Config = config;
         }
 
         /// <summary>

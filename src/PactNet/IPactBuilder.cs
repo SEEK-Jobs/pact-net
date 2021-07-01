@@ -47,7 +47,5 @@ namespace PactNet
         /// <param name="description">Interaction description</param>
         /// <returns>Fluent builder</returns>
         IRequestBuilderV3 UponReceiving(string description);
-
-        // TODO: Add message pacts call here
     }
 }

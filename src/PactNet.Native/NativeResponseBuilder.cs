@@ -10,7 +10,7 @@ namespace PactNet.Native
     /// </summary>
     public class NativeResponseBuilder : IResponseBuilderV2, IResponseBuilderV3
     {
-        private readonly IMockServer server;
+        private readonly IHttpMockServer server;
         private readonly InteractionHandle interaction;
         private readonly JsonSerializerSettings defaultSettings;
         private readonly Dictionary<string, uint> headerCounts;
@@ -21,7 +21,7 @@ namespace PactNet.Native
         /// <param name="server">Mock server</param>
         /// <param name="interaction">Interaction handle</param>
         /// <param name="defaultSettings">Default JSON serializer settings</param>
-        internal NativeResponseBuilder(IMockServer server, InteractionHandle interaction, JsonSerializerSettings defaultSettings)
+        internal NativeResponseBuilder(IHttpMockServer server, InteractionHandle interaction, JsonSerializerSettings defaultSettings)
         {
             this.server = server;
             this.interaction = interaction;

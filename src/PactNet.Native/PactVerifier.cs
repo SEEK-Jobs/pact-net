@@ -12,7 +12,7 @@ namespace PactNet.Native
     {
         private readonly IVerifierProvider verifier;
         private readonly PactVerifierConfig config;
-        private readonly IList<string> verifierArgs = new List<string>();
+        protected internal readonly IList<string> verifierArgs = new List<string>();
 
         /// <summary>
         /// Initialises a new instance of the <see cref="PactVerifier"/> class.
@@ -48,20 +48,31 @@ namespace PactNet.Native
         /// <returns>Fluent builder</returns>
         public IPactVerifier ServiceProvider(string providerName, Uri pactUri)
         {
-            this.verifierArgs.Add("--provider-name");
-            this.verifierArgs.Add(providerName);
-            this.verifierArgs.Add("--hostname");
-            this.verifierArgs.Add(pactUri.Host);
-            this.verifierArgs.Add("--port");
-            this.verifierArgs.Add(pactUri.Port.ToString());
+            verifierArgs.Add("--provider-name");
+            verifierArgs.Add(providerName);
 
-            if (pactUri.AbsolutePath != "/")
-            {
-                this.verifierArgs.Add("--base-path");
-                this.verifierArgs.Add(pactUri.AbsolutePath);
-            }
+            verifierArgs.Add("--hostname");
+            verifierArgs.Add(pactUri.Host);
+
+            verifierArgs.Add("--port");
+            verifierArgs.Add(pactUri.Port.ToString());
+
+            SetBasePath(pactUri);
 
             return this;
+        }
+
+        /// <summary>
+        /// Set the base path
+        /// </summary>
+        /// <param name="pactUri"></param>
+        protected internal virtual void SetBasePath(Uri pactUri)
+        {
+            if (pactUri.AbsolutePath != "/")
+            {
+                verifierArgs.Add("--base-path");
+                verifierArgs.Add(pactUri.AbsolutePath);
+            }
         }
 
         /// <summary>
@@ -71,8 +82,8 @@ namespace PactNet.Native
         /// <returns>Fluent builder</returns>
         public IPactVerifier HonoursPactWith(string consumerName)
         {
-            this.verifierArgs.Add("--filter-consumer");
-            this.verifierArgs.Add(consumerName);
+            verifierArgs.Add("--filter-consumer");
+            verifierArgs.Add(consumerName);
             return this;
         }
 
@@ -83,8 +94,8 @@ namespace PactNet.Native
         /// <returns>Fluent builder</returns>
         public IPactVerifier FromPactFile(FileInfo pactFile)
         {
-            this.verifierArgs.Add("--file");
-            this.verifierArgs.Add(pactFile.FullName);
+            verifierArgs.Add("--file");
+            verifierArgs.Add(pactFile.FullName);
             return this;
         }
 
@@ -95,8 +106,8 @@ namespace PactNet.Native
         /// <returns>Fluent builder</returns>
         public IPactVerifier FromPactUri(Uri pactUri)
         {
-            this.verifierArgs.Add("--url");
-            this.verifierArgs.Add(pactUri.ToString());
+            verifierArgs.Add("--url");
+            verifierArgs.Add(pactUri.ToString());
             return this;
         }
 
@@ -115,46 +126,46 @@ namespace PactNet.Native
                                         IEnumerable<string> consumerVersionTags = null,
                                         string includeWipPactsSince = null)
         {
-            this.verifierArgs.Add("--broker-url");
-            this.verifierArgs.Add(brokerBaseUri.ToString());
+            verifierArgs.Add("--broker-url");
+            verifierArgs.Add(brokerBaseUri.ToString());
 
             if (uriOptions != null)
             {
                 if (!string.IsNullOrWhiteSpace(uriOptions.Username))
                 {
-                    this.verifierArgs.Add($"--user");
-                    this.verifierArgs.Add(uriOptions.Username);
+                    verifierArgs.Add($"--user");
+                    verifierArgs.Add(uriOptions.Username);
                 }
 
                 if (!string.IsNullOrWhiteSpace(uriOptions.Password))
                 {
-                    this.verifierArgs.Add("--password");
-                    this.verifierArgs.Add(uriOptions.Password);
+                    verifierArgs.Add("--password");
+                    verifierArgs.Add(uriOptions.Password);
                 }
 
                 if (!string.IsNullOrWhiteSpace(uriOptions.Token))
                 {
-                    this.verifierArgs.Add("--token");
-                    this.verifierArgs.Add(uriOptions.Token);
+                    verifierArgs.Add("--token");
+                    verifierArgs.Add(uriOptions.Token);
                 }
             }
 
             if (enablePending)
             {
-                this.verifierArgs.Add("--enable-pending");
+                verifierArgs.Add("--enable-pending");
             }
 
             if (consumerVersionTags != null && consumerVersionTags.Any())
             {
                 string versions = string.Join(",", consumerVersionTags);
-                this.verifierArgs.Add("--consumer-version-tags");
-                this.verifierArgs.Add(versions);
+                verifierArgs.Add("--consumer-version-tags");
+                verifierArgs.Add(versions);
             }
 
             if (!string.IsNullOrWhiteSpace(includeWipPactsSince))
             {
-                this.verifierArgs.Add("--include-wip-pacts-since");
-                this.verifierArgs.Add(includeWipPactsSince);
+                verifierArgs.Add("--include-wip-pacts-since");
+                verifierArgs.Add(includeWipPactsSince);
             }
 
             return this;
@@ -167,8 +178,8 @@ namespace PactNet.Native
         /// <returns>Fluent builder</returns>
         public IPactVerifier WithProviderStateUrl(Uri providerStateUri)
         {
-            this.verifierArgs.Add("--state-change-url");
-            this.verifierArgs.Add(providerStateUri.ToString());
+            verifierArgs.Add("--state-change-url");
+            verifierArgs.Add(providerStateUri.ToString());
             return this;
         }
 
@@ -183,14 +194,14 @@ namespace PactNet.Native
             // TODO: Allow env vars to specify description and provider state filters like the old version did
             if (!string.IsNullOrWhiteSpace(description))
             {
-                this.verifierArgs.Add("--filter-description");
-                this.verifierArgs.Add(description);
+                verifierArgs.Add("--filter-description");
+                verifierArgs.Add(description);
             }
 
             if (!string.IsNullOrWhiteSpace(providerState))
             {
-                this.verifierArgs.Add("--filter-state");
-                this.verifierArgs.Add(providerState);
+                verifierArgs.Add("--filter-state");
+                verifierArgs.Add(providerState);
             }
 
             return this;
@@ -209,15 +220,15 @@ namespace PactNet.Native
                 throw new ArgumentException("Can't publish verification results without the provider version being set");
             }
 
-            this.verifierArgs.Add("--publish");
-            this.verifierArgs.Add("--provider-version");
-            this.verifierArgs.Add(providerVersion);
+            verifierArgs.Add("--publish");
+            verifierArgs.Add("--provider-version");
+            verifierArgs.Add(providerVersion);
 
             if (providerTags != null && providerTags.Any())
             {
                 string tags = string.Join(",", providerTags);
-                this.verifierArgs.Add("--provider-tags");
-                this.verifierArgs.Add(tags);
+                verifierArgs.Add("--provider-tags");
+                verifierArgs.Add(tags);
             }
 
             return this;
@@ -229,15 +240,15 @@ namespace PactNet.Native
         public void Verify()
         {
             // TODO: make verifier log level configurable
-            this.verifierArgs.Add("--loglevel");
-            this.verifierArgs.Add("trace");
+            verifierArgs.Add("--loglevel");
+            verifierArgs.Add("trace");
 
-            string formatted = string.Join(Environment.NewLine, this.verifierArgs);
+            string formatted = string.Join(Environment.NewLine, verifierArgs);
 
-            this.config.WriteLine("Invoking the pact verifier with args:");
-            this.config.WriteLine(formatted);
+            config.WriteLine("Invoking the pact verifier with args:");
+            config.WriteLine(formatted);
 
-            this.verifier.Verify(formatted);
+            verifier.Verify(formatted);
         }
     }
 }

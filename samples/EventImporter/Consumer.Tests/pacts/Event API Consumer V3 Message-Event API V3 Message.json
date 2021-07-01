@@ -1,0 +1,49 @@
+{
+  "consumer": {
+    "name": "Event API Consumer V3 Message"
+  },
+  "messages": [
+    {
+      "contents": [
+        {
+          "EventId": "45d80d13-d5a2-48d7-8353-cbb4c0eaabf5",
+          "EventType": "SearchView",
+          "Timestamp": "2014-06-30T01:37:41.0660548"
+        }
+      ],
+      "description": "receiving events from the queue",
+      "matchingRules": {
+        "body": {
+          "$": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "contentType": "application/json",
+        "key": "valueKey"
+      },
+      "providerStates": [
+        {
+          "name": "A list of events is pushed to the queue"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "version": "0.9.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "Event API V3 Message"
+  }
+}

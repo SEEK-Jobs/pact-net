@@ -107,4 +107,10 @@
     <ProjectReference Include="..\PactNet\PactNet.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Http">
+      <Version>2.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

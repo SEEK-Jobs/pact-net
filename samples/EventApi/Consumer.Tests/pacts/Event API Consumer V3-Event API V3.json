@@ -1,0 +1,197 @@
+{
+  "consumer": {
+    "name": "Event API Consumer V3"
+  },
+  "interactions": [
+    {
+      "description": "a request to retrieve all events with multiple provider states",
+      "providerStates": [
+        {
+          "name": "there are events with id '45D80D13-D5A2-48D7-8353-CBB4C0EAABF5'"
+        },
+        {
+          "name": "there are events with id '83F9262F-28F1-4703-AB1A-8CFD9E8249C9'"
+        },
+        {
+          "name": "there are events with id '3E83A96B-2A0C-49B1-9959-26DF23F83AEB'"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer SomeValidAuthToken"
+        },
+        "method": "GET",
+        "path": "/events"
+      },
+      "response": {
+        "body": [
+          {
+            "eventId": "45d80d13-d5a2-48d7-8353-cbb4c0eaabf5",
+            "eventType": "SearchView",
+            "timestamp": "2014-06-30T01:37:41.0660548"
+          },
+          {
+            "eventId": "83f9262f-28f1-4703-ab1a-8cfd9e8249c9",
+            "eventType": "DetailsView",
+            "timestamp": "2014-06-30T01:37:52.2618864"
+          },
+          {
+            "eventId": "3e83a96b-2a0c-49b1-9959-26df23f83aeb",
+            "eventType": "SearchView",
+            "timestamp": "2014-06-30T01:38:00.8518952"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to retrieve all events with multiple provider states and params",
+      "providerStates": [
+        {
+          "name": "there are events with ids",
+          "params": {
+            "eventId1": "45d80d13-d5a2-48d7-8353-cbb4c0eaabf5",
+            "eventId2": "83f9262f-28f1-4703-ab1a-8cfd9e8249c9",
+            "eventId3": "3e83a96b-2a0c-49b1-9959-26df23f83aeb"
+          }
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer SomeValidAuthToken"
+        },
+        "method": "GET",
+        "path": "/events"
+      },
+      "response": {
+        "body": [
+          {
+            "eventId": "45d80d13-d5a2-48d7-8353-cbb4c0eaabf5",
+            "eventType": "SearchView",
+            "timestamp": "2014-06-30T01:37:41.0660548"
+          },
+          {
+            "eventId": "83f9262f-28f1-4703-ab1a-8cfd9e8249c9",
+            "eventType": "DetailsView",
+            "timestamp": "2014-06-30T01:37:52.2618864"
+          },
+          {
+            "eventId": "3e83a96b-2a0c-49b1-9959-26df23f83aeb",
+            "eventType": "SearchView",
+            "timestamp": "2014-06-30T01:38:00.8518952"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to retrieve event with id '83f9262f-28f1-4703-ab1a-8cfd9e8249c9'",
+      "providerStates": [
+        {
+          "name": "there is an event with id '83f9262f-28f1-4703-ab1a-8cfd9e8249c9'"
+        }
+      ],
+      "request": {
+        "headers": {
+          "accept": "application/json",
+          "authorization": "Bearer SomeValidAuthToken"
+        },
+        "method": "GET",
+        "path": "/events/83f9262f-28f1-4703-ab1a-8cfd9e8249c9"
+      },
+      "response": {
+        "body": {
+          "eventId": "83f9262f-28f1-4703-ab1a-8cfd9e8249c9",
+          "eventType": "DetailsView",
+          "timestamp": "2021-06-23T09:30:49.3699804Z"
+        },
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$.eventId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+                }
+              ]
+            },
+            "$.eventType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.timestamp": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])T(2[0-3]|[0-1][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]+)?(Z|[+-](?:2[0-3]|[0-1][0-9]):[0-5][0-9])?$"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to retrieve events with type 'DetailsView'",
+      "providerStates": [
+        {
+          "name": "there is one event with type 'DetailsView'"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer SomeValidAuthToken"
+        },
+        "method": "GET",
+        "path": "/events",
+        "query": {
+          "type": [
+            "DetailsView"
+          ]
+        }
+      },
+      "response": {
+        "body": [
+          {
+            "eventType": "DetailsView"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "version": "0.9.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "Event API V3"
+  }
+}

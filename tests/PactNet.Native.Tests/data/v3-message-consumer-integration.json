@@ -1,0 +1,45 @@
+{
+  "consumer": {
+    "name": "PactExtensionsTests-MessageConsumer-V3"
+  },
+  "messages": [
+    {
+      "contents": {
+        "Bool": false,
+        "Int": 1,
+        "String": "a description"
+      },
+      "description": "a sample request",
+      "metadata": {
+        "contentType": "application/json",
+        "queueId": "1234"
+      },
+      "providerStates": [
+        {
+          "name": "a provider state"
+        },
+        {
+          "name": "another provider state"
+        },
+        {
+          "name": "a provider state with params",
+          "params": {
+            "baz": "bash",
+            "foo": "bar"
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "version": "0.9.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "PactExtensionsTests-MessageProvider"
+  }
+}
