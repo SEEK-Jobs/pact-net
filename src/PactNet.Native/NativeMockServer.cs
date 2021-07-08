@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace PactNet.Native
@@ -14,8 +14,7 @@ namespace PactNet.Native
         static NativeMockServer()
         {
             // TODO: make this configurable somehow, except it applies once for the entire native lifetime, so dunno
-            Environment.SetEnvironmentVariable("LOG_LEVEL", "DEBUG");
-            Interop.Init("LOG_LEVEL");
+            Interop.LogToBuffer(LevelFilter.Debug);
         }
 
         public int CreateMockServerForPact(PactHandle pact, string addrStr, bool tls)
@@ -52,7 +51,7 @@ namespace PactNet.Native
             IntPtr logsPtr = Interop.MockServerLogs(mockServerPort);
 
             return logsPtr == IntPtr.Zero
-                       ? string.Empty
+                       ? "ERROR: Unable to retrieve mock server logs"
                        : Marshal.PtrToStringAnsi(logsPtr);
         }
 
@@ -120,8 +119,8 @@ namespace PactNet.Native
         {
             private const string dllName = "pact_mock_server_ffi";
 
-            [DllImport(dllName, EntryPoint = "init")]
-            public static extern void Init(string logEnvVar);
+            [DllImport(dllName, EntryPoint = "log_to_buffer")]
+            public static extern void LogToBuffer(LevelFilter levelFilter);
 
             [DllImport(dllName, EntryPoint = "create_mock_server_for_pact")]
             public static extern int CreateMockServerForPact(PactHandle pact, string addrStr, bool tls);
@@ -200,5 +199,15 @@ namespace PactNet.Native
         V2 = 3,
         V3 = 4,
         V4 = 5
+    }
+
+    internal enum LevelFilter
+    {
+        Off = 0,
+        Error = 1,
+        Warn = 2,
+        Info = 3,
+        Debug = 4,
+        Trace = 5,
     }
 }

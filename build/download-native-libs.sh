@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MOCK_SERVER_VERSION="0.0.17"
+MOCK_SERVER_VERSION="0.1.0"
 MOCK_SERVER_BASE_URL="https://github.com/pact-foundation/pact-reference/releases/download/libpact_mock_server_ffi-v$MOCK_SERVER_VERSION"
 
-VERIFIER_VERSION="0.0.4"
+VERIFIER_VERSION="0.0.5"
 VERIFIER_BASE_URL="https://github.com/pact-foundation/pact-reference/releases/download/pact_verifier_ffi-v$VERIFIER_VERSION"
 
 base_path=$(dirname "$0")
+
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CLEAR="\e[0m"
 
 download_native() {
     base_url="$1"
@@ -23,15 +28,15 @@ download_native() {
     path="$base_path/$os/$platform"
     mkdir -p "$path"
 
-    echo "Downloading $component"
-    echo "    Platform: $os/$platform"
-    echo "    File: $file.$extension"
+    echo -e "Downloading ${YELLOW}$component${CLEAR}"
+    echo -e "    Platform: ${BLUE}$os/$platform${CLEAR}"
+    echo -e "    File: ${BLUE}$file.$extension${CLEAR}"
     echo "    URL: $url"
 
     echo -n "    Downloading... "
     curl --silent -L "$url" -o "$path/$file.$extension.gz"
     curl --silent -L "$sha" -o "$path/$file.$extension.gz.sha256"
-    echo "OK"
+    echo -e "${GREEN}OK${CLEAR}"
 
     echo -n "    Verifying... "
 
@@ -45,11 +50,12 @@ download_native() {
     fi
 
     rm "$path/$file.$extension.gz.sha256"
-    echo "OK"
+    echo -e "${GREEN}OK${CLEAR}"
 
     echo -n "    Extracting... "
     gunzip -f "$path/$file.$extension.gz"
-    echo "OK"
+    echo -e "${GREEN}OK${CLEAR}"
+    echo ""
 }
 
 download_native "$MOCK_SERVER_BASE_URL" "pact_mock_server_ffi" "pact_mock_server_ffi" "windows" "x86_64" "dll"

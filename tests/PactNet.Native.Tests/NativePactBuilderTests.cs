@@ -77,15 +77,7 @@ namespace PactNet.Native.Tests
             action.Should().Throw<InvalidOperationException>("because the mock server failed to start");
         }
 
-        [Fact(Skip = "Enable this when the released FFI library supports getting mock server logs")]
-        public void Verify_NoLogs_DoesNotWriteLogs()
-        {
-            this.builder.Verify(Success);
-
-            this.mockOutput.Verify(o => o.WriteLine(It.IsAny<string>()), Times.Never);
-        }
-
-        [Fact(Skip = "Enable this when the released FFI library supports getting mock server logs")]
+        [Fact]
         public void Verify_Logs_WritesLogsToOutput()
         {
             const string expected = "some logs";
